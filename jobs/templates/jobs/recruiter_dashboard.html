@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Recruiter Dashboard</h2>
+<hr>
+
+<h4>Your Jobs</h4>
+<ul>
+    {% for job in jobs %}
+        <li>{{ job.title }}</li>
+    {% empty %}
+        <p>No jobs posted yet.</p>
+    {% endfor %}
+</ul>
+
+<h4>Applicants</h4>
+<ul>
+    {% for app in applicants %}
+        <li>{{ app.applicant.username }} → {{ app.job.title }} ({{ app.status }})</li>
+    {% empty %}
+        <p>No applicants yet.</p>
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .job-detail-card {
+        border-radius: 18px;
+        padding: 25px;
+        background: #ffffff;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+    }
+
+    .badge-pill {
+        border-radius: 999px;
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+
+    .label-title {
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+</style>
+
+
+<div class="container mt-4 fade-in" style="max-width: 900px;">
+
+    <div class="job-detail-card">
+
+        <!-- Title + Company -->
+        <div class="d-flex justify-content-between flex-wrap align-items-start mb-2">
+            <div>
+                <h2 class="fw-bold mb-1">{{ job.title }}</h2>
+                <p class="text-muted mb-1">
+                    {{ job.company }} · {{ job.location }}
+                </p>
+                <small class="text-muted">
+                    Posted by <strong>{{ job.posted_by.username }}</strong> on {{ job.created_at|date:"M d, Y" }}
+                </small>
+            </div>
+
+            <!-- Status / Type + Salary -->
+            <div class="text-end">
+                {% if job.job_type %}
+                    <span class="badge bg-info text-dark badge-pill">
+                        {{ job.get_job_type_display }}
+                    </span>
+                {% endif %}
+
+                {% if job.salary %}
+                    <div class="mt-2">
+                        <span class="badge bg-success badge-pill">
+                            ₹{{ job.salary }} / month
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Job Info Grid -->
+        <div class="row mb-3">
+            {% if job.last_date %}
+            <div class="col-md-4 mb-2">
+                <div class="label-title">Last Date to Apply</div>
+                <div>{{ job.last_date|date:"M d, Y" }}</div>
+            </div>
+            {% endif %}
+
+            {% if job.experience_required %}
+            <div class="col-md-4 mb-2">
+                <div class="label-title">Experience Required</div>
+                <div>{{ job.experience_required }}</div>
+            </div>
+            {% endif %}
+
+            {% if job.location %}
+            <div class="col-md-4 mb-2">
+                <div class="label-title">Location</div>
+                <div>{{ job.location }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Skills -->
+        {% if job.skills %}
+        <div class="mb-3">
+            <div class="label-title">Skills Required</div>
+            <p class="mb-1">{{ job.skills }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Description -->
+        <div class="mb-3">
+            <div class="label-title">Job Description</div>
+            <p style="white-space: pre-line;">{{ job.description }}</p>
+        </div>
+
+        <hr>
+
+        <!-- ACTIONS SECTION -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mt-2">
+
+            <!-- Left: Back Button -->
+            <div class="mb-2">
+                <a href="{% url 'job_list' %}" class="btn btn-outline-secondary btn-sm">
+                    ← Back to Jobs
+                </a>
+            </div>
+
+            <!-- Right: Different actions based on role -->
+            <div class="d-flex flex-wrap gap-2">
+
+                {# ------------------ FREELANCER ACTIONS ------------------ #}
+                {% if user.is_authenticated and user.role == "freelancer" %}
+                    {% if already_applied %}
+                        <button class="btn btn-outline-success btn-sm" disabled>
+                            ✅ Already Applied
+                        </button>
+                        <a href="{% url 'freelancer_applications' %}" class="btn btn-sm btn-primary">
+                            View My Applications
+                        </a>
+                    {% else %}
+                        <a href="{% url 'apply_job' job.id %}" class="btn btn-success btn-sm">
+                            Apply Now
+                        </a>
+                    {% endif %}
+                {% endif %}
+
+                {# ------------------ RECRUITER ACTIONS ------------------ #}
+                {% if user.is_authenticated and user == job.posted_by %}
+                    <a href="{% url 'manage_applicants' job.id %}" class="btn btn-outline-success btn-sm">
+                        Manage Applicants ({{ job.applications.count }})
+                    </a>
+
+                    <a href="{% url 'edit_job' job.id %}" class="btn btn-outline-warning btn-sm">
+                        Edit Job
+                    </a>
+
+                    <a href="{% url 'delete_job' job.id %}" class="btn btn-outline-danger btn-sm">
+                        Delete Job
+                    </a>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

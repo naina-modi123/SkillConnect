@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.detail-box {
+    padding: 30px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+</style>
+
+<div class="container mt-4">
+    <div class="detail-box">
+
+        <h2 class="fw-bold">{{ job.title }}</h2>
+        <p class="text-muted">{{ job.company }} • {{ job.location }}</p>
+
+        <hr>
+
+        <h5>Description</h5>
+        <p>{{ job.description }}</p>
+
+        <h5>Required Skills</h5>
+        <p>{{ job.required_skills }}</p>
+
+        <h5>Salary Range</h5>
+        <p>{{ job.salary_min }} - {{ job.salary_max }} USD</p>
+
+        <h5>Last Apply Date</h5>
+        <p>{{ job.last_date }}</p>
+
+        <hr>
+
+        {% if user.role == "freelancer" %}
+            {% if already_applied %}
+                <button class="btn btn-secondary" disabled>You Already Applied</button>
+            {% else %}
+                <a href="{% url 'apply_job' job.id %}" class="btn btn-success">Apply Now</a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

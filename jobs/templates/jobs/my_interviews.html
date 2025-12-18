@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="text-primary fw-bold">📅 My Interviews</h2>
+    <p class="text-muted">All your upcoming and past interviews</p>
+    <hr>
+
+    {% if interviews %}
+        {% for interview in interviews %}
+            <div class="card shadow-sm mb-3 p-3">
+
+                <h5 class="fw-bold">
+                    {{ interview.job.title }}
+                </h5>
+
+                <p>
+                    <strong>Date:</strong> {{ interview.date }} <br>
+                    <strong>Time:</strong> {{ interview.time }} <br>
+                    <strong>Mode:</strong> {{ interview.get_mode_display }} <br>
+                    
+                    {% if interview.mode == "online" %}
+                        <strong>Meeting Link:</strong>
+                        <a href="{{ interview.meeting_link }}" target="_blank">
+                            Join Meeting
+                        </a>
+                        <br>
+                    {% endif %}
+
+                    <strong>Status:</strong>
+                    {% if interview.status == "scheduled" %}
+                        <span class="badge bg-success">Scheduled</span>
+                    {% elif interview.status == "cancelled" %}
+                        <span class="badge bg-danger">Cancelled</span>
+                    {% endif %}
+                </p>
+
+                {% if interview.message %}
+                    <p><strong>Message from recruiter:</strong> {{ interview.message }}</p>
+                {% endif %}
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted text-center mt-4">You have no interviews yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

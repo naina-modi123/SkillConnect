@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 900px;">
+
+    <div class="card shadow-lg p-4">
+
+        <div class="d-flex align-items-center">
+            
+            <!-- Company Logo -->
+            {% if company.logo %}
+                <img src="{{ company.logo.url }}" 
+                     class="rounded me-3"
+                     style="width: 120px; height: 120px; object-fit: cover;">
+            {% else %}
+                <div class="bg-light rounded d-flex justify-content-center align-items-center me-3"
+                     style="width: 120px; height: 120px; font-size: 40px;">
+                    🏢
+                </div>
+            {% endif %}
+
+            <div>
+                <h2 class="fw-bold">{{ company.company_name }}</h2>
+
+                {% if company.location %}
+                    <p class="text-muted mb-1">📍 {{ company.location }}</p>
+                {% endif %}
+
+                {% if company.website %}
+                    <p class="mb-1">
+                        🌐 <a href="{{ company.website }}" target="_blank">
+                            {{ company.website }}
+                        </a>
+                    </p>
+                {% endif %}
+
+                {% if company.team_size %}
+                    <p class="text-muted mb-1">👥 Team Size: {{ company.team_size }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <hr>
+
+        <h4 class="fw-semibold">About Company</h4>
+        <p>
+            {% if company.description %}
+                {{ company.description }}
+            {% else %}
+                <span class="text-muted">No company description added yet.</span>
+            {% endif %}
+        </p>
+
+        <div class="text-end">
+            <a href="{% url 'edit_company_profile' %}" class="btn btn-primary">
+                Edit Company Profile
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

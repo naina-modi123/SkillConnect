@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 750px;">
+    <div class="card shadow p-4">
+        <h2 class="text-center text-primary mb-4">Post a New Job</h2>
+
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Please fix the errors below:</strong>
+            {{ form.errors }}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Job Title</label>
+                {{ form.title }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Company</label>
+                {{ form.company }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Location</label>
+                {{ form.location }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Salary</label>
+                {{ form.salary }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Job Type</label>
+                {{ form.job_type }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Job Description</label>
+                {{ form.description }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Required Skills</label>
+                {{ form.skills }}
+                <small class="text-muted">
+                    Hold Ctrl (Windows) / Cmd (Mac) to select multiple skills
+                </small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Last Date to Apply</label>
+                {{ form.last_date }}
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mt-3">
+                Post Job
+            </button>
+
+            <a href="{% url 'recruiter_dashboard' %}" 
+               class="btn btn-secondary w-100 mt-2">
+                Back to Dashboard
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

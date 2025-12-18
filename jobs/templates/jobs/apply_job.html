@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-3">Apply for {{ job.title }}</h2>
+
+    <p><strong>Company:</strong> {{ job.company }}</p>
+    <p><strong>Location:</strong> {{ job.location }}</p>
+
+    <hr>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Cover Letter</label>
+            {{ form.cover_letter }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Upload Resume (PDF)</label>
+            {{ form.resume }}
+            <p class="text-muted small">Only PDF allowed. Max size: 5 MB</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Application</button>
+
+        <!-- Back Button (fixed) -->
+        <a href="{% url 'job_detail' job.id %}" class="btn btn-secondary ms-2">Back</a>
+
+    </form>
+
+</div>
+
+{% endblock %}

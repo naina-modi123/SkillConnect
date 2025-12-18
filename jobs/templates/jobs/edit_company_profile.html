@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 700px;">
+    <div class="card shadow-lg p-4">
+
+        <h2 class="text-center fw-bold mb-3">Edit Company Profile</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Logo Preview -->
+            <div class="text-center mb-3">
+                {% if form.instance.logo %}
+                    <img src="{{ form.instance.logo.url }}"
+                         class="rounded mb-2"
+                         style="width: 120px; height: 120px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-light rounded d-flex justify-content-center align-items-center mb-2"
+                         style="width: 120px; height: 120px; font-size: 40px; margin:auto;">
+                         🏢
+                    </div>
+                {% endif %}
+                <label class="form-label">Company Logo</label>
+                {{ form.logo }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Company Name</label>
+                {{ form.company_name }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Website</label>
+                {{ form.website }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Location</label>
+                {{ form.location }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Team Size</label>
+                {{ form.team_size }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Company Description</label>
+                {{ form.description }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-2">
+                Save Changes
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <a href="{% url 'company_profile' %}" class="btn btn-secondary">Back</a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

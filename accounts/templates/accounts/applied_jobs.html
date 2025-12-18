@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="card shadow p-4">
+        <h2 class="fw-bold mb-3">Applied Jobs</h2>
+
+        {% if applied_jobs %}
+            <ul class="list-group">
+                {% for job in applied_jobs %}
+                <li class="list-group-item">
+                    <strong>{{ job.title }}</strong><br>
+                    <span class="text-muted">{{ job.company }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">You haven't applied to any jobs yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.profile-card {
+    border-radius: 14px;
+    padding: 30px;
+    background: #ffffff;
+    box-shadow: 0px 8px 25px rgba(0,0,0,0.08);
+}
+
+.profile-photo {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0d6efd;
+}
+</style>
+
+
+<div class="container mt-5">
+    <div class="profile-card">
+
+        <!-- Profile Header -->
+        <div class="text-center mb-4">
+            {% if profile.profile_photo %}
+                <img src="{{ profile.profile_photo.url }}" class="profile-photo mb-3">
+            {% else %}
+                <div style="font-size: 80px;">👤</div>
+            {% endif %}
+
+            <h2 class="fw-bold">{{ profile.full_name }}</h2>
+            <p class="text-muted">@{{ profile.user.username }}</p>
+        </div>
+
+        <hr>
+
+        <!-- Basic Info -->
+        <h4 class="fw-semibold">Basic Information</h4>
+
+        <p><strong>Email:</strong> {{ profile.user.email }}</p>
+
+        <p><strong>Location:</strong>
+            {% if profile.location %}
+                {{ profile.location }}
+            {% else %}
+                <span class="text-muted">Not provided</span>
+            {% endif %}
+        </p>
+
+        <p><strong>Bio:</strong><br>
+            {% if profile.bio %}
+                {{ profile.bio }}
+            {% else %}
+                <span class="text-muted">No bio available.</span>
+            {% endif %}
+        </p>
+
+        <p><strong>Skills:</strong><br>
+            {% if profile.skills %}
+                {{ profile.skills }}
+            {% else %}
+                <span class="text-muted">No skills listed.</span>
+            {% endif %}
+        </p>
+
+        <p><strong>Experience Level:</strong> {{ profile.experience_level|title }}</p>
+        <p><strong>Years of Experience:</strong> {{ profile.years_experience }} years</p>
+        <p><strong>Hourly Rate:</strong> ${{ profile.hourly_rate }}/hr</p>
+
+        <p><strong>Portfolio Link:</strong><br>
+            {% if profile.portfolio_link %}
+                <a href="{{ profile.portfolio_link }}" target="_blank">{{ profile.portfolio_link }}</a>
+            {% else %}
+                <span class="text-muted">No portfolio link provided.</span>
+            {% endif %}
+        </p>
+
+        <hr>
+
+        <!-- Portfolio Projects -->
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="fw-semibold">Portfolio Projects</h4>
+        </div>
+
+        {% if profile.projects.all %}
+            <div class="row mt-3">
+                {% for project in profile.projects.all %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm h-100">
+
+                            {% if project.image %}
+                                <img src="{{ project.image.url }}" class="card-img-top"
+                                     style="height: 180px; object-fit: cover;">
+                            {% endif %}
+
+                            <div class="card-body">
+                                <h5 class="card-title">{{ project.title }}</h5>
+                                <p class="text-muted small">{{ project.description|truncatechars:80 }}</p>
+
+                                {% if project.project_link %}
+                                    <a href="{{ project.project_link }}" class="small text-primary" target="_blank">
+                                        View Project →
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <p class="text-muted mt-3">This freelancer has not added any projects.</p>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

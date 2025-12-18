@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 700px;">
+    <div class="card shadow p-4">
+
+        <h2 class="text-center mb-3 fw-bold">Post a Job</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button class="btn btn-success w-100 mt-3">Post Job</button>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 700px;">
+    <h2>Edit Profile</h2>
+    <hr>
+
+    <!-- SHOW FORM ERRORS CLEARLY -->
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>Please fix the errors below:</strong>
+        {{ form.errors }}
+    </div>
+    {% endif %}
+
+    <!-- IMPORTANT: action + POST -->
+    <form method="POST" action="{% url 'edit_freelancer_profile' %}">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Bio</label>
+            {{ form.bio }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Location</label>
+            {{ form.location }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Experience Level</label>
+            {{ form.experience_level }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Years of Experience</label>
+            {{ form.years_of_experience }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Hourly Rate</label>
+            {{ form.hourly_rate }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Availability</label>
+            {{ form.availability }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Portfolio Website</label>
+            {{ form.portfolio }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Save Changes
+        </button>
+
+        <a href="{% url 'freelancer_profile' %}" class="btn btn-secondary ms-2">
+            Cancel
+        </a>
+    </form>
+</div>
+{% endblock %}

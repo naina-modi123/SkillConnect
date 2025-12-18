@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dash-card {
+        padding: 25px;
+        border-radius: 18px;
+        background: white;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        transition: 0.25s ease;
+        text-align: center;
+    }
+
+    .dash-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .dash-icon {
+        font-size: 45px;
+        margin-bottom: 10px;
+    }
+</style>
+
+
+<div class="container mt-4 fade-in">
+
+    <!-- Header -->
+    <h2 class="fw-bold mb-1">Recruiter Dashboard</h2>
+    <p class="text-muted">
+        Welcome, <strong>{{ user.username }}</strong> — manage jobs & company details here.
+    </p>
+
+    <hr>
+
+    <!-- Three Main Cards -->
+    <div class="row g-4">
+
+        <!-- Post New Job -->
+        <div class="col-md-4">
+            <a href="{% url 'post_job' %}" style="text-decoration:none; color:inherit;">
+                <div class="dash-card">
+                    <div class="dash-icon">➕</div>
+                    <h5 class="fw-bold">Post New Job</h5>
+                    <p class="text-muted small">Create a new job listing</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Manage All Jobs -->
+        <div class="col-md-4">
+            <a href="{% url 'job_list' %}" style="text-decoration:none; color:inherit;">
+                <div class="dash-card">
+                    <div class="dash-icon">📋</div>
+                    <h5 class="fw-bold">View All Jobs</h5>
+                    <p class="text-muted small">Check all posted jobs & applicants</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Company Profile -->
+        <div class="col-md-4">
+            <a href="{% url 'company_profile' %}" style="text-decoration:none; color:inherit;">
+                <div class="dash-card">
+                    <div class="dash-icon">🏢</div>
+                    <h5 class="fw-bold">Company Profile</h5>
+                    <p class="text-muted small">Manage company details & branding</p>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- JOB LIST PREVIEW SECTION -->
+    <hr class="mt-4">
+
+    <h4 class="fw-semibold mb-3">My Job Posts</h4>
+
+    {% if my_jobs %}
+        <div class="row g-4">
+            {% for job in my_jobs %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="dash-card">
+
+                        <h5 class="fw-bold">{{ job.title }}</h5>
+                        <p class="text-muted small">{{ job.company }} · {{ job.location }}</p>
+
+                        <span class="badge bg-secondary mb-2">
+                            {{ job.applications.count }} Applicant{{ job.applications.count|pluralize }}
+                        </span>
+
+                        <hr>
+
+                        <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary btn-sm w-100 mb-2">
+                            View Job
+                        </a>
+                        <a href="{% url 'manage_applicants' job.id %}" class="btn btn-outline-success btn-sm w-100">
+                            Manage Applicants
+                        </a>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <p class="text-muted">You have not posted any jobs yet.</p>
+        <a href="{% url 'post_job' %}" class="btn btn-primary">Post a Job</a>
+    {% endif %}
+
+</div>
+<!-- ================= CHATBOT UI ================= -->
+
+<!-- Floating Chat Button -->
+<div id="chatbot-toggle">💬</div>
+
+<!-- Chat Window -->
+<div id="chatbot-box">
+    <div id="chatbot-header">
+        SkillConnect AI
+        <span id="chatbot-close">✖</span>
+    </div>
+
+    <div id="chatbot-messages"></div>
+
+    <div id="chatbot-input-area">
+        <input type="text" id="chatbot-input" placeholder="Ask me anything..." />
+        <button id="chatbot-send">Send</button>
+    </div>
+</div>
+<style>
+#chatbot-toggle {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #198754;
+    color: white;
+    font-size: 22px;
+    padding: 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+#chatbot-box {
+    position: fixed;
+    bottom: 90px;
+    right: 25px;
+    width: 320px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+#chatbot-header {
+    background: #198754;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#chatbot-messages {
+    padding: 10px;
+    height: 250px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+#chatbot-input-area {
+    display: flex;
+    border-top: 1px solid #ddd;
+}
+
+#chatbot-input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    outline: none;
+}
+
+#chatbot-send {
+    background: #198754;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+}
+</style>
+<script>
+const toggleBtn = document.getElementById("chatbot-toggle");
+const chatBox = document.getElementById("chatbot-box");
+const closeBtn = document.getElementById("chatbot-close");
+const sendBtn = document.getElementById("chatbot-send");
+const input = document.getElementById("chatbot-input");
+const messages = document.getElementById("chatbot-messages");
+
+toggleBtn.onclick = () => chatBox.style.display = "flex";
+closeBtn.onclick = () => chatBox.style.display = "none";
+
+sendBtn.onclick = sendMessage;
+
+function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    messages.innerHTML += `<div><strong>You:</strong> ${text}</div>`;
+    input.value = "";
+
+    fetch("/chatbot/chat/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({ message: text })
+    })
+    .then(res => res.json())
+    .then(data => {
+        messages.innerHTML += `<div><strong>AI:</strong> ${data.reply}</div>`;
+        messages.scrollTop = messages.scrollHeight;
+    });
+}
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+    .dashboard-header {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 25px;
+        color: #343a40;
+    }
+
+    .dash-card {
+        border-radius: 12px;
+        background: #ffffff;
+        padding: 20px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        transition: 0.3s ease;
+    }
+
+    .dash-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+    }
+
+    .dash-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .job-box {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        border-left: 4px solid #0d6efd;
+    }
+
+    .job-box p {
+        margin: 0;
+    }
+
+    .tag {
+        display: inline-block;
+        padding: 4px 10px;
+        background: #e8f0fe;
+        color: #0d6efd;
+        font-size: 12px;
+        border-radius: 6px;
+        margin-right: 5px;
+    }
+</style>
+
+<div class="dashboard-header">
+    <i class="fa-solid fa-user-gear"></i> Freelancer Dashboard
+</div>
+
+
+<div class="row g-4">
+
+    <!-- ⭐ Profile Summary -->
+    <div class="col-md-4">
+        <div class="dash-card">
+            <div class="dash-title">
+                <i class="fa-solid fa-id-card-clip"></i> My Profile
+            </div>
+
+            {% if profile %}
+                <p><strong>Name:</strong> {{ profile.full_name }}</p>
+                <p><strong>Skills:</strong></p>
+
+                {% for skill in profile.skills.split(",") %}
+                    <span class="tag">{{ skill }}</span>
+                {% endfor %}
+
+                <br><br>
+                <a href="{% url 'freelancer_profile' %}" class="btn btn-primary w-100">
+                    Edit Profile
+                </a>
+            {% else %}
+                <p class="text-muted">No profile created yet.</p>
+                <a href="{% url 'freelancer_profile' %}" class="btn btn-success w-100">
+                    Create Profile
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <!-- ⭐ Saved Jobs -->
+    <div class="col-md-4">
+        <div class="dash-card">
+            <div class="dash-title">
+                <i class="fa-solid fa-bookmark"></i> Saved Jobs
+            </div>
+
+            {% if saved_jobs %}
+                {% for item in saved_jobs %}
+                    <div class="job-box">
+                        <p><strong>{{ item.job.title }}</strong></p>
+                        <p class="text-muted">{{ item.job.company }}</p>
+
+                        <a href="{% url 'job_detail' item.job.id %}" 
+                           class="btn btn-sm btn-outline-primary mt-2">
+                            View Job →
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No saved jobs yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <!-- ⭐ My Applications -->
+    <div class="col-md-4">
+        <div class="dash-card">
+            <div class="dash-title">
+                <i class="fa-solid fa-file-contract"></i> My Applications
+            </div>
+
+            {% if applications %}
+                {% for app in applications %}
+                    <div class="job-box">
+                        <p><strong>{{ app.job.title }}</strong></p>
+
+                        {% if app.status == "pending" %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% elif app.status == "accepted" %}
+                            <span class="badge bg-success">Accepted</span>
+                        {% else %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% endif %}
+
+                        <br>
+                        <a href="{% url 'job_detail' app.job.id %}" 
+                           class="btn btn-sm btn-outline-secondary mt-2">
+                            View →
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">You haven't applied yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+<!-- ⭐ View My Interviews Button -->
+<div class="mt-4 text-center">
+    <a href="{% url 'my_interviews' %}" class="btn btn-lg btn-outline-primary">
+        <i class="fa-solid fa-calendar-check"></i> View My Interviews
+    </a>
+</div>
+
+
+<!-- ⭐ Recommended Jobs Section -->
+<div class="mt-5">
+    <h3><i class="fa-solid fa-star"></i> Recommended For You</h3>
+    <p class="text-muted">Based on your skills & activity</p>
+
+    <div class="row mt-3 g-3">
+
+        {% for job in recommended_jobs %}
+        <div class="col-md-4">
+            <div class="dash-card">
+
+                <h5>{{ job.title }}</h5>
+                <p class="text-muted">{{ job.company }} • {{ job.location }}</p>
+
+                <a href="{% url 'job_detail' job.id %}" 
+                   class="btn btn-sm btn-primary w-100 mt-2">
+                    View Job →
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.jobs-hero {
+    padding: 25px 20px;
+    border-radius: 18px;
+    background: linear-gradient(120deg, #eef2ff, #e0f7ff);
+    margin-bottom: 25px;
+}
+.filter-pill {
+    border-radius: 999px;
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    background: white;
+    font-size: 14px;
+}
+.job-card {
+    border-radius: 16px;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: 0.25s;
+    height: 100%;
+}
+.job-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+}
+.job-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+.badge-jobtype {
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 12px;
+}
+.badge-skill {
+    background: #e3f2fd;
+    color: #0d6efd;
+    padding: 6px 12px;
+    border-radius: 999px;
+    margin: 3px 4px 0 0;
+    font-size: 12px;
+    display: inline-block;
+}
+</style>
+
+<div class="container mt-4">
+
+    <!-- Search & Filters -->
+    <div class="jobs-hero">
+        <h2 class="fw-bold mb-2">Find Your Next Opportunity</h2>
+        <p class="text-muted">Search and filter jobs based on your skills, location, and salary preferences.</p>
+
+        <form method="get" class="row g-2">
+
+            <div class="col-md-4">
+                <input type="text" name="q" class="form-control"
+                       placeholder="Search title, company, skills"
+                       value="{{ q }}">
+            </div>
+
+            <div class="col-md-3">
+                <input type="text" name="location" class="form-control"
+                       placeholder="Location" value="{{ selected_location }}">
+            </div>
+
+            <div class="col-md-2">
+                <select name="job_type" class="form-select">
+                    <option value="">Job Type</option>
+                    <option value="full_time" {% if selected_job_type == "full_time" %}selected{% endif %}>Full Time</option>
+                    <option value="part_time" {% if selected_job_type == "part_time" %}selected{% endif %}>Part Time</option>
+                    <option value="internship" {% if selected_job_type == "internship" %}selected{% endif %}>Internship</option>
+                    <option value="remote" {% if selected_job_type == "remote" %}selected{% endif %}>Remote</option>
+                    <option value="contract" {% if selected_job_type == "contract" %}selected{% endif %}>Contract</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <input type="number" name="min_salary" class="form-control"
+                       placeholder="Min Salary" value="{{ min_salary }}">
+            </div>
+
+            <div class="col-md-1 d-grid">
+                <button type="submit" class="btn btn-primary">🔍</button>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- Job Results -->
+    {% if jobs %}
+        <div class="row g-4">
+            {% for job in jobs %}
+            <div class="col-md-4">
+                <div class="job-card">
+
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="job-title">{{ job.title }}</h4>
+                            <p class="text-muted">{{ job.company }} • {{ job.location }}</p>
+                        </div>
+
+                        <span class="badge bg-light text-dark badge-jobtype">
+                            {{ job.get_job_type_display }}
+                        </span>
+                    </div>
+
+                    <p><strong>Salary:</strong>
+                        {% if job.salary %}
+                            ₹{{ job.salary }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </p>
+
+                    <!-- ⭐ FIXED SKILL TAGS -->
+                    {% if job.skill_list %}
+                        <div class="mt-2">
+                            {% for skill in job.skill_list %}
+                                <span class="badge-skill">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <p class="text-muted small mt-2">
+                        Posted on {{ job.created_at|date:"M d, Y" }}
+                    </p>
+
+                    <a href="{% url 'job_detail' job.id %}"
+                       class="btn btn-outline-primary w-100 mt-2">
+                        View Details →
+                    </a>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-muted mt-5">
+            No jobs match your filters. Try adjusting your search.
+        </p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-3">Freelancer Signup</h2>
+
+        <!-- Show form errors -->
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Please fix the following errors:</strong>
+            <ul class="mb-0">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- FORM START -->
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button class="btn btn-success w-100 mt-3" type="submit">
+                Sign Up as Freelancer
+            </button>
+        </form>
+        <!-- FORM END -->
+
+        <div class="text-center mt-3">
+            <a href="{% url 'recruiter_signup' %}">Recruiter Signup</a> |
+            <a href="{% url 'login' %}">Login</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
