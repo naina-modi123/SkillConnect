@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ==============================
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-print("GEMINI KEY LOADED:", bool(GEMINI_API_KEY))
+# print("GEMINI KEY LOADED:", bool(GEMINI_API_KEY))
 
 
 
