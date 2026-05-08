@@ -13,8 +13,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ==============================
 # OPENAI CONFIG
 # ==============================
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
 print("GEMINI KEY LOADED:", bool(GEMINI_API_KEY))
 
 

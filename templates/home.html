@@ -3,13 +3,8 @@
 
 {% if user.is_authenticated %}
 
-<!-- ============================  
-     LOGGED-IN USER VIEW  
-============================ -->
 <div class="container text-center mt-5">
-
     <h1 class="fw-bold mb-3">Welcome back, {{ user.username }}! 👋</h1>
-
     <p class="text-muted mb-4">Quick access to your main tools</p>
 
     {% if user.role == "freelancer" %}
@@ -24,20 +19,13 @@
             Go to Recruiter Dashboard
         </a>
     {% endif %}
-
 </div>
 
 {% else %}
 
-<!-- ============================  
-     VISITOR VIEW (Your UI)  
-============================ -->
-
 <style>
-/* ----------------------------------------------------------
-   GLOBAL FONT + PAGE FADE-IN
------------------------------------------------------------*/
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
 body, h1, h2, h3, p, a {
     font-family: 'Poppins', sans-serif !important;
 }
@@ -45,15 +33,13 @@ body, h1, h2, h3, p, a {
 body {
     animation: fadeIn 0.9s ease-in-out;
 }
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
-
-/* ----------------------------------------------------------
-   HERO SECTION
------------------------------------------------------------*/
+/* HERO */
 .hero-section {
     padding: 100px 20px 80px;
     background: linear-gradient(120deg, #ffecd2, #fcb69f, #a1c4fd, #c2e9fb);
@@ -61,8 +47,6 @@ body {
     animation: gradientShift 10s ease infinite;
     border-radius: 22px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
 }
 
 @keyframes gradientShift {
@@ -71,34 +55,7 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-
-/* ----------------------------------------------------------
-   FLOATING BUBBLES
------------------------------------------------------------*/
-.bubble {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.35);
-    filter: blur(8px);
-    animation: floatBubbles 6s ease-in-out infinite;
-}
-
-.b1 { top: 20px; left: 40px; }
-.b2 { bottom: 40px; right: 60px; animation-delay: 1.3s; }
-.b3 { top: 50%; left: 75%; animation-delay: 2.1s; }
-
-@keyframes floatBubbles {
-    0% { transform: translateY(0); opacity: 0.7; }
-    50% { transform: translateY(-22px); opacity: 1; }
-    100% { transform: translateY(0); opacity: 0.75; }
-}
-
-
-/* ----------------------------------------------------------
-   HEADING
------------------------------------------------------------*/
+/* TEXT */
 .hero-title {
     font-size: 52px;
     font-weight: 900;
@@ -112,10 +69,7 @@ body {
     color: #2e2e2e;
 }
 
-
-/* ----------------------------------------------------------
-   SEARCH BAR
------------------------------------------------------------*/
+/* SEARCH */
 .search-wrapper {
     display: flex;
     justify-content: center;
@@ -139,18 +93,13 @@ body {
     font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: 0.25s;
 }
 
 .search-button:hover {
-    transform: scale(1.07);
-    background-color: #0d8e68;
+    transform: scale(1.05);
 }
 
-
-/* ----------------------------------------------------------
-   CATEGORY TAGS
------------------------------------------------------------*/
+/* CATEGORY */
 .category-container {
     text-align: center;
     margin-top: 25px;
@@ -162,44 +111,89 @@ body {
     margin: 7px;
     border-radius: 25px;
     border: 1px solid #ddd;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     cursor: pointer;
-    transition: 0.2s;
 }
 
-.category-badge:hover {
-    transform: translateY(-5px);
-}
-
-
-/* ----------------------------------------------------------
-   FEATURE CARDS
------------------------------------------------------------*/
+/* FEATURE CARDS */
 .feature-card {
     background: white;
     padding: 32px;
     border-radius: 16px;
     text-align: center;
     box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-    transition: 0.28s ease;
 }
 
 .feature-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
+}
+
+.feature-title {
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #1a1a1a;
+}
+
+/* ===========================
+   TIMELINE DESIGN
+=========================== */
+
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: auto;
+}
+
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    background-color: #10b981;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -2px;
+}
+
+.timeline-item {
+    padding: 20px 40px;
+    position: relative;
+    width: 50%;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.6s ease;
+}
+
+.timeline-item.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.timeline-item:nth-child(odd) {
+    left: 0;
+}
+
+.timeline-item:nth-child(even) {
+    left: 50%;
+}
+
+.timeline-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.phase-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #0f2d36;
 }
 </style>
 
-
-<!-- Floating bubbles -->
-<div class="bubble b1"></div>
-<div class="bubble b2"></div>
-<div class="bubble b3"></div>
-
-
+<!-- HERO -->
 <div class="container hero-section">
-
     <h1 class="hero-title">Connect Skills with Opportunities.</h1>
-
     <p class="hero-subtitle">
         A modern hiring ecosystem where freelancers grow and recruiters find the perfect talent.
     </p>
@@ -209,36 +203,98 @@ body {
         <button class="search-button" onclick="runSearch()">Search</button>
     </div>
 
-    <div style="margin-top: 40px;">   <!-- ⬅ moves buttons lower -->
-    <a href="/accounts/signup/freelancer/" class="btn btn-success hero-btn">I'm a Freelancer</a>
-    <a href="/accounts/signup/recruiter/" class="btn btn-outline-primary hero-btn">I'm a Recruiter</a>
+    <div style="margin-top: 40px;">
+        <a href="/accounts/signup/freelancer/" class="btn btn-success">I'm a Freelancer</a>
+        <a href="/accounts/signup/recruiter/" class="btn btn-outline-primary">I'm a Recruiter</a>
     </div>
 
     <p class="mt-3">
         Already have an account? <a href="/accounts/login/">Login</a>
     </p>
-
 </div>
 
-
+<!-- CATEGORY -->
 <div class="category-container">
     <span class="category-badge">Web Development</span>
     <span class="category-badge">AI & ML</span>
     <span class="category-badge">Graphic Design</span>
     <span class="category-badge">Data Science</span>
-    <span class="category-badge">App Development</span>
-    <span class="category-badge">Content Writing</span>
 </div>
 
-
+<!-- FEATURES -->
 <div class="container mt-5 mb-5">
     <div class="row g-4">
-        <div class="col-md-4"><div class="feature-card"><h4>🚀 Find Projects Faster</h4><p>Build your profile and get matched instantly.</p></div></div>
-        <div class="col-md-4"><div class="feature-card"><h4>🎯 Hire Skilled Talent</h4><p>Filter candidates by skills, experience & portfolio.</p></div></div>
-        <div class="col-md-4"><div class="feature-card"><h4>🤖 Smart Matching</h4><p>AI connects you with the perfect opportunities.</p></div></div>
+
+        <div class="col-md-4">
+            <div class="feature-card">
+                <h4 class="feature-title">Find Projects Faster</h4>
+                <p>Build your profile and get matched instantly.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-card">
+                <h4 class="feature-title">Hire Skilled Talent</h4>
+                <p>Filter candidates by skills, experience & portfolio.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-card">
+                <h4 class="feature-title">Smart Matching</h4>
+                <p>AI connects you with the perfect opportunities.</p>
+            </div>
+        </div>
+
     </div>
 </div>
 
+<!-- TIMELINE -->
+<div class="container mt-5 mb-5">
+    <h2 class="text-center fw-bold mb-3">How SkillConnect Works</h2>
+    <p class="text-center text-muted mb-5">
+        Powered by AI & Smart Automation – from profile creation to getting hired.
+    </p>
+
+    <div class="timeline">
+
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5 class="phase-title">Phase 1: Setup & Trust</h5>
+                <p>Create profile, verify identity, and build trust score.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5 class="phase-title">Phase 2: Smart Matching</h5>
+                <p>Add skills and get AI-powered job matches.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5 class="phase-title">Phase 3: Apply & Connect</h5>
+                <p>Generate proposals, apply, and chat with recruiters.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5 class="phase-title">Phase 4: Hiring Process</h5>
+                <p>Shortlisting, interviews, and scheduling made easy.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5 class="phase-title">Phase 5: Success</h5>
+                <p>Get hired and grow with analytics & insights.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <script>
 function runSearch() {
@@ -249,6 +305,24 @@ function runSearch() {
     }
     window.location.href = "/search/?q=" + encodeURIComponent(q);
 }
+
+// timeline animation
+const items = document.querySelectorAll('.timeline-item');
+
+function showTimeline() {
+    const trigger = window.innerHeight * 0.85;
+
+    items.forEach(item => {
+        const top = item.getBoundingClientRect().top;
+        if (top < trigger) {
+            item.classList.add('show');
+        }
+    });
+}
+
+window.addEventListener('scroll', showTimeline);
+
+
 </script>
 
 {% endif %}

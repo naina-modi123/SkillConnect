@@ -213,28 +213,63 @@ closeBtn.onclick = () => chatBox.style.display = "none";
 
 sendBtn.onclick = sendMessage;
 
+// ENTER key support
+input.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+        sendMessage();
+    }
+});
+
+// ✅ Django-approved CSRF token getter
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 function sendMessage() {
     const text = input.value.trim();
     if (!text) return;
 
     messages.innerHTML += `<div><strong>You:</strong> ${text}</div>`;
     input.value = "";
+    messages.scrollTop = messages.scrollHeight;
 
     fetch("/chatbot/chat/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X-CSRFToken": "{{ csrf_token }}"
+            "X-CSRFToken": getCookie("csrftoken")  // 🔥 FIX
         },
         body: JSON.stringify({ message: text })
     })
     .then(res => res.json())
     .then(data => {
-        messages.innerHTML += `<div><strong>AI:</strong> ${data.reply}</div>`;
+        console.log("AI RESPONSE:", data);
+
+        if (data.reply) {
+            messages.innerHTML += `<div><strong>AI:</strong> ${data.reply}</div>`;
+        } else {
+            messages.innerHTML += `<div><strong>AI:</strong> No response received.</div>`;
+        }
+
+        messages.scrollTop = messages.scrollHeight;
+    })
+    .catch(err => {
+        console.error("Chat error:", err);
+        messages.innerHTML += `<div><strong>AI:</strong> Error contacting server.</div>`;
         messages.scrollTop = messages.scrollHeight;
     });
 }
 </script>
-
 
 {% endblock %}
