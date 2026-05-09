@@ -36,25 +36,33 @@ def post_job(request):
 # ---------------------------------------------------------
 # JOB LIST
 # ---------------------------------------------------------
+from django.db.utils import OperationalError
+from django.core.paginator import Paginator
+from django.db.models import Q
+
 def job_list(request):
     q = request.GET.get("q", "")
-    jobs = Job.objects.all().order_by("-created_at")
 
-    if q:
-        jobs = jobs.filter(
-            Q(title__icontains=q) |
-            Q(company__icontains=q) |
-            Q(location__icontains=q) |
-            Q(description__icontains=q)
-        )
+    try:
+        jobs = Job.objects.all().order_by("-created_at")
+
+        if q:
+            jobs = jobs.filter(
+                Q(title__icontains=q) |
+                Q(company__icontains=q) |
+                Q(location__icontains=q) |
+                Q(description__icontains=q)
+            )
+    except OperationalError:
+        # If the jobs_job table does not exist on Vercel,
+        # use an empty list so the page still loads.
+        jobs = []
 
     paginator = Paginator(jobs, 10)
     page_number = request.GET.get("page")
     jobs_page = paginator.get_page(page_number)
 
     return render(request, "jobs/job_list.html", {"jobs": jobs_page})
-
-
 # ---------------------------------------------------------
 # JOB DETAIL
 # ---------------------------------------------------------
