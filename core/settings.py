@@ -149,16 +149,23 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 # ==============================
 # CHANNELS (WebSockets)
 # ==============================
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
-    },
-}
-
-
+if os.environ.get("VERCEL"):
+    # Use in-memory channel layer on Vercel
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        }
+    }
+else:
+    # Use Redis locally
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("127.0.0.1", 6379)],
+            },
+        }
+    }
 # ==============================
 # EMAIL SETTINGS (WORKING)
 # ==============================
