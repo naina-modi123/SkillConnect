@@ -24,7 +24,12 @@ SECRET_KEY = 'django-insecure-20z(ut6o&ughgoza(v+1&bsae1xwud**r1&1=ul6o8mth3dg0-
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "skillconnect-project.vercel.app",
+    ".vercel.app",
+    "127.0.0.1",
+    "localhost",
+]
 
 
 # ==============================
